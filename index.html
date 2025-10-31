@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zhavia Enterprise & General Supplies</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <style>
+    :root{
+      --dark-mauve:#2e0b2f; /* very dark mauve */
+      --light-mauve:#f3e9f3; /* very light mauve */
+      --accent:#6b2a63;
+      --glass: rgba(255,255,255,0.06);
+      --glass-2: rgba(255,255,255,0.09);
+      --text:#efe7ef;
+      --muted:#c9b8c9;
+      --halo: rgba(255,255,255,0.12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--dark-mauve),#180518);color:var(--text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+    /* Header */
+    header{position:fixed;inset:0 0 auto 0;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:40;backdrop-filter: blur(6px);background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{height:48px;width:48px;border-radius:50%;object-fit:cover}
+    .brand h1{font-size:18px;margin:0;letter-spacing:1px}
+    /* Hamburger */
+    .hamburger{width:52px;height:52px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+    .hamburger:before{content:'';position:absolute;inset: -3px;padding:3px;border-radius:14px;box-shadow:0 0 18px rgba(255,255,255,0.03) inset}
+    .hamburger .lines{width:22px;height:14px;display:inline-block;position:relative}
+    .hamburger .lines span{position:absolute;height:2px;background:var(--text);left:0;right:0;border-radius:2px;transition:all .35s}
+    .hamburger .lines span:nth-child(1){top:0}
+    .hamburger .lines span:nth-child(2){top:6px}
+    .hamburger .lines span:nth-child(3){top:12px}
+
+    /* Overlay menu */
+    .menu-overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.75));backdrop-filter: blur(6px);display:none;align-items:center;justify-content:center;z-index:80}
+    .menu-overlay.open{display:flex}
+    .menu{background:linear-gradient(180deg,var(--glass),var(--glass-2));padding:36px;border-radius:14px;min-width:280px;max-width:420px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+    .menu a{display:block;color:var(--text);text-decoration:none;padding:12px 0;font-weight:600;font-size:18px;border-radius:8px}
+    .menu a:hover{background:rgba(255,255,255,0.02)}
+
+    main{padding-top:96px}
+    section{min-height:80vh;padding:64px 6vw;display:flex;align-items:center}
+    .container{max-width:1100px;margin:0 auto;width:100%}
+
+    /* HERO */
+    .hero{align-items:center;gap:40px}
+    .hero .left{flex:1}
+    .hero h2{font-size:40px;margin:0 0 12px;line-height:1.02}
+    .hero p{color:var(--muted);font-size:16px;margin:0 0 20px}
+    .hero .cta{display:inline-flex;align-items:center;gap:12px;padding:12px 18px;border-radius:12px;background:linear-gradient(90deg,var(--accent),#8a3b7a);box-shadow:0 6px 30px rgba(107,42,99,0.25);cursor:pointer;position:relative;overflow:hidden}
+    .cta .halo{position:absolute;inset:auto auto 6px 6px;width:36px;height:36px;border-radius:50%;filter:blur(18px);opacity:0.9;background:radial-gradient(circle,rgba(255,255,255,0.6),rgba(255,255,255,0));animation:spin 6s linear infinite}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    .cta span{position:relative;z-index:2}
+
+    .hero .right{flex:1;display:flex;justify-content:center}
+    .hero .card{width:320px;height:380px;border-radius:16px;background:linear-gradient(180deg,var(--light-mauve),rgba(255,255,255,0.65));box-shadow:0 18px 50px rgba(20,8,20,0.6);overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .hero .card img{width:92%;height:auto;border-radius:8px}
+
+    /* About */
+    .about{flex-direction:column;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-top:1px solid rgba(255,255,255,0.02)}
+    .about-grid{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:center}
+    .founder{background:linear-gradient(180deg,var(--glass-2),rgba(255,255,255,0.03));padding:20px;border-radius:12px;text-align:center}
+    .founder img{width:180px;height:180px;border-radius:12px;object-fit:cover;border:4px solid rgba(255,255,255,0.04)}
+    .founder h3{margin:12px 0 4px}
+    .founder p{margin:0;font-size:14px;color:var(--muted)}
+    /* About line-split animation */
+    .about p {position:relative;line-height:1.6}
+    .about .word-temp{display:inline} /* temporary word spans used for measuring */
+    .about .line{display:block;opacity:0;transform:translateY(18px);transition:opacity .55s cubic-bezier(.2,.9,.2,1),transform .55s cubic-bezier(.2,.9,.2,1)}
+    .about .line.in{opacity:1;transform:none}
+
+    /* Services */
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+    .service-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.015));padding:18px;border-radius:12px;min-height:120px;transition:transform .35s,box-shadow .35s;position:relative;overflow:hidden}
+    .service-card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(0,0,0,0.45)}
+    .service-card h4{margin:0 0 6px}
+    .service-card p{margin:0;color:var(--muted);font-size:14px}
+    .service-card:before{content:'';position:absolute;inset:auto 10px 10px auto;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.03);box-shadow:0 0 18px rgba(255,255,255,0.02)}
+
+    /* icon for service cards */
+    .service-card .icon {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:46px;
+      height:46px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.03);
+      color:var(--accent);
+      font-size:20px;
+      margin-bottom:10px;
+    }
+    .service-card h4 {display:flex;align-items:center;gap:12px}
+    /* ...existing code... */
+    /* Key clients */
+    .clients{display:flex;flex-direction:column;gap:18px}
+    .client-logos{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+    .client-logos img{height:56px;border-radius:8px;background:rgba(255,255,255,0.02);padding:8px}
+
+    /* Performance section - animated charts */
+    .performance{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:center}
+    .stats{display:flex;flex-direction:column;gap:12px}
+    .stat{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:10px}
+    .stat h4{margin:0;font-size:18px}
+    .chart{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:20px;border-radius:12px}
+    svg{width:100%;height:220px;display:block}
+    .chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  justify-items: center;
+}
+
+.chart-grid {
+  display: flex;
+  justify-content: space-between; /* evenly space the cards */
+  align-items: stretch;
+  gap: 24px;
+  flex-wrap: wrap; /* wraps on smaller screens */
+  margin-top: 2rem;
+}
+
+.chart-card {
+  flex: 1; /* each card takes equal width */
+  min-width: 240px; /* prevents them from shrinking too much on small screens */
+  background: rgba(255,255,255,0.03);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.chart-card h4 {
+  color: var(--accent, #d65cb1);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 360px;gap:28px}
+    .contact-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:12px}
+    .contact-card a{color:var(--text);text-decoration:none}
+.contact-card i {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.contact-card a:hover i {
+  transform: scale(1.1);
+  color: #9c4791;
+}
+
+    footer{padding:28px 6vw;text-align:center;color:var(--muted)}
+
+    /* Reveal animations */
+    .reveal{opacity:0;transform:translateY(18px);transition:all .7s cubic-bezier(.2,.9,.2,1)}
+    .reveal.in{opacity:1;transform:none}
+
+    /* small screens */
+    @media (max-width:880px){
+      .about-grid{grid-template-columns:1fr}
+      .performance{grid-template-columns:1fr}
+      .contact-grid{grid-template-columns:1fr}
+      .hero{flex-direction:column}
+      .hero .card{width:80%;height:auto}
+    }
+
+    /* halo highlight when element in-view */
+    .halo-effect{position:relative}
+    .halo-effect.in::after{content:'';position:absolute;inset:-8px;border-radius:14px;box-shadow:0 0 48px 12px rgba(255,255,255,0.045);pointer-events:none;animation:haloPulse 2.6s infinite}
+    @keyframes haloPulse{0%{transform:scale(.96);opacity:0.9}50%{transform:scale(1.03);opacity:0.6}100%{transform:scale(.96);opacity:0.9}}
+
+    
+  </style>
+</head>
+<body>
+  <header class="container">
+    <div class="brand">
+      <img src="Zhavia Logo.jpg" alt="Zhavia logo">
+      <div>
+        <h1>Zhavia Enterprise</h1>
+        <div style="font-size:12px;color:var(--muted)">Affordable quality supplies</div>
+      </div>
+    </div>
+    <div class="hamburger" id="hamburger" aria-label="menu" role="button">
+      <div class="lines"><span></span><span></span><span></span></div>
+    </div>
+  </header>
+
+  <div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+    <nav class="menu" role="navigation">
+      <a href="#home" data-target>Home</a>
+      <a href="#about" data-target>About</a>
+      <a href="#services" data-target>Services</a>
+      <a href="#clients" data-target>Key Clients</a>
+      <a href="#contact" data-target>Contact</a>
+      <div style="height:8px"></div>
+      <a href="#" id="closeMenu">Close</a>
+    </nav>
+  </div>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="container">
+        <div class="hero" style="align-items:center;">
+          <div class="left">
+            <h2 class="reveal">Zhavia Enterprise &amp; General Supplies</h2>
+            <p class="reveal">Your trusted partner for affordable, high-quality supplies — stationery, provisions, office equipment, catering, vehicle rentals, multimedia, and clearing &amp; forwarding.</p>
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="cta halo-effect reveal" id="ctaContact">
+                <div class="halo"></div>
+                <span>Contact us on WhatsApp</span>
+              </div>
+              <a class="reveal" href="#services" style="color:var(--muted);text-decoration:none;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.02)">Our Services</a>
+            </div>
+          </div>
+          <div class="right">
+            <div class="card reveal">
+              <img src="Building.jpg" alt="building">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <div class="container">
+        <div class="about-grid">
+          <div>
+            <h3 class="reveal">About Zhavia</h3>
+            <p class="reveal">Zhavia Enterprise &amp; General Supplies provides reliable, affordable, and timely supply solutions across Sierra Leone. We focus on building lasting relationships with clients through quality, transparency and exceptional service.</p>
+
+            <h4 class="reveal" style="margin-top:18px">Vision &amp; Mission</h4>
+            <p class="reveal">To become the leading supplier in Sierra Leone by consistently delivering value and building trust. Our mission is to provide affordable, high-quality supplies and exceptional service, making a positive impact on the communities we serve.</p>
+
+            <div style="margin-top:18px" class="reveal">
+              <strong>Founder</strong>
+              <p style="color:var(--muted)">Fatmata Benteh Isatu Bah — Founder &amp; CEO. A dedicated leader passionate about empowering businesses with reliable supply solutions.</p>
+            </div>
+          </div>
+
+          <aside class="founder reveal halo-effect">
+            <img src="founder and CEO.jpg" alt="Founder and CEO">
+            <h3>Fatmata Benteh I. Bah</h3>
+            <p>Founder &amp; CEO</p>
+            <p style="margin-top:10px;color:var(--muted);font-size:13px">Leading Zhavia in delivering quality supply chain solutions across multiple sectors.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <h3 class="reveal">Services</h3>
+        <div class="services-grid" style="margin-top:18px">
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-pencil"></i></div>
+            <h4>Stationery</h4>
+            <p>Notebooks, pens, staplers — all essential office supplies.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-soap"></i></div>
+            <h4>Toiletries</h4>
+            <p>Soap, shampoo, tissue rolls, disinfectants.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-box-open"></i></div>
+            <h4>Provisions</h4>
+            <p>Rice, flour, canned goods and household essentials.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-desktop"></i></div>
+            <h4>Office Equipment</h4>
+            <p>Computers, printers, cartridges and accessories.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-utensils"></i></div>
+            <h4>Catering</h4>
+            <p>Professional catering services for office events.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-car"></i></div>
+            <h4>Vehicle Rentals</h4>
+            <p>Reliable trucks and cars for inter-city and inter-country travel.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-image"></i></div>
+            <h4>Multimedia</h4>
+            <p>Design, printing and installation services for multimedia projects.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="icon"><i class="fa-solid fa-truck"></i></div>
+            <h4>Clearing &amp; Forwarding</h4>
+            <p>Streamlined customs and logistics solutions.</p>
+          </div>
+        </div>  
+      </div>
+    </section>
+
+    <section id="clients" style="padding-top:24px;padding-bottom:24px">
+      <div class="container">
+        <h3 class="reveal">Key Clients &amp; Projects</h3>
+        <div class="clients" style="margin-top:18px">
+          <div class="client-logos reveal">
+            <div style="color:var(--muted);font-size:14px">SL Red Cross Society</div>
+            <div style="color:var(--muted);font-size:14px">Save the Children</div>
+            <div style="color:var(--muted);font-size:14px">UNICEF</div>
+            <div style="color:var(--muted);font-size:14px">Sierra Rutile Ltd</div>
+            <div style="color:var(--muted);font-size:14px">National Revenue Authority</div>
+          </div>
+
+          <div style="margin-top:18px" class="reveal">
+            <strong>Completed Projects</strong>
+            <ul style="color:var(--muted)">
+              <li>Supply of rain coats and boots to humanitarian partners</li>
+              <li>Supply of laptops and office equipment to corporate clients</li>
+              <li>Stationery and school materials to UNICEF and education partners</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+<section id="performance" class="section reveal">
+  <h2 class="subheading center">Performance Overview</h2>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h4>Customer Satisfaction</h4>
+      <div id="chart-satisfaction"></div>
+    </div>
+
+    <div class="chart-card">
+      <h4>Savings Compared to Competitors</h4>
+      <div id="chart-savings"></div>
+    </div>
+
+    <div class="chart-card">
+      <h4>Positive Feedback</h4>
+      <div id="chart-feedback"></div>
+    </div>
+  </div>
+</section>
+
+    </section>
+
+<section id="contact" class="contact" style="padding-top:18px;padding-bottom:18px">
+      <div class="container">
+      <div class="contact-grid" style="align-items:start">
+        <div class="contact-card reveal">
+    </div>
+   </div>
+      <div class="contact-card reveal">
+  <p style="color:var(--muted)">
+    <i class="fa-solid fa-phone" style="margin-right:8px;color:var(--accent)"></i>
+    Tel: <a href="tel:+23233393212">+232 33 393 212</a> / <a href="tel:+23278164178">+232 78 164 178</a>
+  </p>
+
+  <p style="color:var(--muted)">
+    <i class="fa-solid fa-envelope" style="margin-right:8px;color:var(--accent)"></i>
+    Email: <a href="mailto:zhaviaenterprise001@gmail.com">zhaviaenterprise001@gmail.com</a>
+  </p>
+
+  <p style="color:var(--muted)">
+    <i class="fa-solid fa-location-dot" style="margin-right:8px;color:var(--accent)"></i>
+    Address: 49 John Street, Freetown
+  </p>
+
+  <div style="margin-top:12px">
+    <a href="https://wa.me/23278164178" target="_blank" class="cta halo-effect" style="display:inline-flex;align-items:center;gap:8px">
+      <i class="fa-brands fa-whatsapp"></i>
+      <span>Message on WhatsApp</span>
+    </a>
+  </div>
+</div>
+      
+    </section>
+
+    <footer>
+      © <span id="year"></span> Zhavia Enterprise &amp; General Supplies — All rights reserved
+    </footer>
+  </main>
+
+  <script>
+    // Utility: smooth scroll for anchors
+    document.querySelectorAll('[data-target], .menu a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const target = a.getAttribute('href') || a.dataset.target;
+        if(target && target.startsWith('#')){
+          e.preventDefault();
+          document.querySelector(target).scrollIntoView({behavior:'smooth',block:'start'});
+          closeMenu();
+        }
+      })
+    })
+
+    // Hamburger open/close
+    const hamburger = document.getElementById('hamburger');
+    const overlay = document.getElementById('menuOverlay');
+    hamburger.addEventListener('click', ()=>{overlay.classList.add('open');document.body.style.overflow='hidden'})
+    document.getElementById('closeMenu').addEventListener('click', (e)=>{e.preventDefault();closeMenu()})
+    overlay.addEventListener('click',(e)=>{if(e.target===overlay) closeMenu()})
+    function closeMenu(){overlay.classList.remove('open');document.body.style.overflow=''}
+
+    // Reveal on scroll & halo toggles (improved obs)
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('in');
+          if(entry.target.classList.contains('halo-effect')) entry.target.classList.add('in');
+        }
+      })
+    },{threshold:0.16, rootMargin: '0px 0px -12% 0px'}); // trigger slightly earlier
+    document.querySelectorAll('.reveal, .halo-effect').forEach(el=>io.observe(el));
+
+    // rAF-throttled scroll handling (no heavy work here; placeholder for future effects)
+    let scrollTicking = false;
+    function onScroll(){
+      if(!scrollTicking){
+        scrollTicking = true;
+        requestAnimationFrame(()=>{ 
+          // lightweight scroll tasks (kept minimal to avoid jank)
+          // e.g. lazy-change body attribute for small header transforms if desired
+          scrollTicking = false;
+        });
+      }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+
+    // small animated line charts using SVG (kept, but throttled usage)
+    function drawSpark(svgEl, percent){
+      if(!svgEl) return;
+      svgEl.innerHTML='';
+      const w=100,h=30;const pts=20;let path='';
+      for(let i=0;i<pts;i++){
+        const x=(i/(pts-1))*w;
+        const y=h - (Math.sin(i/3 + 1.3)*0.5 + 0.5)*(h*0.6*percent/100) - 2;
+        path += (i===0?`M ${x} ${y}`:` L ${x} ${y}`);
+      }
+      const ns='http://www.w3.org/2000/svg';
+      const bg = document.createElementNS(ns,'path');
+      bg.setAttribute('d',path);
+      bg.setAttribute('stroke','rgba(255,255,255,0.08)');bg.setAttribute('fill','none');bg.setAttribute('stroke-width','2');svgEl.appendChild(bg);
+
+      const fg = document.createElementNS(ns,'path');
+      fg.setAttribute('d',path);
+      fg.setAttribute('stroke','white');fg.setAttribute('fill','none');fg.setAttribute('stroke-width','2');fg.setAttribute('stroke-dasharray',1000);
+      fg.setAttribute('stroke-dashoffset',1000);
+      svgEl.appendChild(fg);
+
+      // animate stroke-dashoffset (slower & smoother)
+      let offset=1000;
+      const step = 6; // slower step -> longer draw
+      const tick = 18;
+      const id=setInterval(()=>{
+        offset -= step;
+        fg.setAttribute('stroke-dashoffset', Math.max(0, offset));
+        if(offset<=0) clearInterval(id);
+      }, tick);
+    }
+
+    // radial animation guard (only if element exists)
+    (function initRadial(){
+      const radial = document.getElementById('radial');
+      if(!radial) return;
+      if(radial && !radial.dataset.animated){
+        radial.dataset.animated='1';
+        const circle = radial.querySelector('.circle');
+        const percentageText = radial.querySelector('.percentage');
+        if(!circle) return;
+        let pct = 0; const target = 98; const r=15.9155; const circumference = 2*Math.PI*r;
+        circle.setAttribute('stroke-dasharray', `${circumference} ${circumference}`);
+        circle.setAttribute('stroke-dashoffset', circumference);
+        const id=setInterval(()=>{
+          pct++;
+          const offset = circumference - (pct/100)*circumference;
+          circle.setAttribute('stroke-dashoffset', offset);
+          percentageText && (percentageText.textContent = Math.min(pct, target)+'%');
+          if(pct>=target){clearInterval(id)}
+        },20) // slower unit tick
+      }
+    })();
+
+    // CTA and focus halo - add small hover for accessibility
+    document.querySelectorAll('.cta').forEach(el=>{
+      el.addEventListener('mouseenter',()=>el.classList.add('in'))
+      el.addEventListener('mouseleave',()=>el.classList.remove('in'))
+    })
+
+    // contact form guard (avoid runtime error if missing)
+    const contactFormEl = document.getElementById('contactForm');
+    if(contactFormEl){
+      contactFormEl.addEventListener('submit',(e)=>{e.preventDefault();alert('Message sent — this is a demo form. Replace with your backend or email integration.');e.target.reset()})
+    }
+
+    // set year
+    const yearEl = document.getElementById('year');
+    if(yearEl) yearEl.textContent=new Date().getFullYear();
+
+    // initial small reveals on load (fixed typo)
+    window.addEventListener('load',()=>{document.querySelectorAll('.reveal').forEach((el,i)=>setTimeout(()=>el.classList.add('in'),120*i))})
+  </script>
+
+  <!-- Defer loading ApexCharts until Performance section is near view.
+       This reduces initial parsing/render cost and improves scroll jank. -->
+  <script>
+    // visual hints for smoothness
+    document.querySelectorAll('.chart-card').forEach(c=>{ c.style.willChange = 'transform, opacity'; c.style.transform = 'translateZ(0)'; });
+
+    // Chart loader: load ApexCharts only when performance section is approaching viewport
+    (function(){
+      const perfSection = document.getElementById('performance');
+      if(!perfSection) return;
+
+      // small helper to insert script when idle or after small delay
+      function loadApexAndInit(){
+        if(window.ApexCharts) { initCharts(); return; }
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/apexcharts';
+        s.async = true;
+        s.onload = initCharts;
+        (document.head || document.documentElement).appendChild(s);
+      }
+
+      // throttle observer to pre-load 250px before entering view
+      const loaderObserver = new IntersectionObserver((entries, obs)=>{
+        entries.forEach(en=>{
+          if(en.isIntersecting){
+            // use requestIdleCallback when available to avoid main-thread contention
+            if('requestIdleCallback' in window){
+              requestIdleCallback(loadApexAndInit, {timeout: 800});
+            } else {
+              setTimeout(loadApexAndInit, 220);
+            }
+            // once started, no need to keep observing
+            obs.unobserve(en.target);
+          }
+        })
+      }, { rootMargin: '0px 0px 250px 0px', threshold: 0 });
+
+      loaderObserver.observe(perfSection);
+
+      // chart creation lives here to be called after ApexCharts loads
+      const chartColors = {
+        accent: '#d65cb1',
+        secondary: '#9c4791',
+        text: '#fff',
+        bg: 'rgba(255,255,255,0.08)'
+      };
+
+      function createRadialChart(id, value, color) {
+        const options = {
+          chart: {
+            type: 'radialBar',
+            height: 250,
+            animations: {
+              enabled: true,
+              easing: 'easeout',
+              // slower animation for smoother feel
+              speed: 1800,
+            }
+          },
+          series: [value],
+          colors: [color],
+          plotOptions: {
+            radialBar: {
+              hollow: { size: '65%', background: 'transparent' },
+              track: { background: chartColors.bg, strokeWidth: '100%' },
+              dataLabels: {
+                name: { show: false },
+                value: {
+                  show: true,
+                  fontSize: '24px',
+                  color: chartColors.text,
+                  offsetY: -10,
+                  formatter: (val) => val + '%',
+                },
+              },
+            },
+          },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shade: 'dark',
+              type: 'vertical',
+              gradientToColors: [chartColors.secondary],
+              stops: [0, 100],
+            },
+          },
+          labels: [''],
+          stroke: { lineCap: 'round' }
+        };
+
+        const el = document.querySelector(id);
+        if (!el) return null;
+        el.innerHTML = '';
+        const chart = new ApexCharts(el, options);
+        chart.render();
+        return chart;
+      }
+
+      const chartConfigs = [
+        { id: '#chart-satisfaction', value: 98, color: chartColors.accent },
+        { id: '#chart-savings',      value: 30, color: chartColors.accent },
+        { id: '#chart-feedback',     value: 90, color: chartColors.accent }
+      ];
+
+      const chartInstances = {};
+
+      // observe each chart container and render when visible
+      const chartObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.target || entry.target.nodeType !== 1) return;
+          if (entry.isIntersecting) {
+            const selector = '#' + entry.target.id;
+            const cfg = chartConfigs.find(c => c.id === selector);
+            if (!cfg) return;
+            // destroy previous to replay animation if needed
+            if (chartInstances[selector]) {
+              try { chartInstances[selector].destroy(); } catch (e) {}
+              chartInstances[selector] = null;
+            }
+            // small stagger for nicer effect
+            setTimeout(()=>{ chartInstances[selector] = createRadialChart(cfg.id, cfg.value, cfg.color); }, 120);
+          }
+        });
+      }, { threshold: 0.35, rootMargin: '0px 0px -6% 0px' });
+
+      // start observing but only after ApexCharts loaded
+      function initCharts(){
+        chartConfigs.forEach(cfg => {
+          const el = document.querySelector(cfg.id);
+          if (el) chartObserver.observe(el);
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
